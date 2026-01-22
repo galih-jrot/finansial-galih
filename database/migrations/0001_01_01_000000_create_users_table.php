@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // PERBAIKAN: Menambahkan 'petugas' ke dalam list enum
+            $table->enum('role', ['admin', 'member', 'petugas'])->default('member');
+
             $table->rememberToken();
             $table->timestamps();
         });
