@@ -1,0 +1,9 @@
+- [x] Buat KategoriController.php di app/Http/Controllers/
+- [x] Buat view index untuk kategori di resources/views/dashboard/kategori/index.blade.php
+- [x] Buat view create untuk kategori di resources/views/dashboard/kategori/create.blade.php
+- [x] Buat view edit untuk kategori di resources/views/dashboard/kategori/edit.blade.php
+- [ ] Generate APP_KEY
+- [ ] Periksa konfigurasi database
+- [ ] Jalankan migration
+- [ ] Build Vite assets
+- [ ] Test aplikasi akhir

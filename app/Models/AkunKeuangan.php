@@ -3,6 +3,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AkunKeuangan extends Model
 {
@@ -12,11 +14,23 @@ class AkunKeuangan extends Model
 
     protected $fillable = [
         'nama_akun',
-        'jenis',
+        'jenis', // 'tunai', 'bank', atau 'e-wallet'
         'saldo_awal',
+        'user_id',
     ];
 
-    public function transaksi()
+    /**
+     * Relasi: Akun ini milik seorang user.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Relasi: Satu akun bisa memiliki banyak catatan transaksi.
+     */
+    public function transaksi(): HasMany
     {
         return $this->hasMany(Transaksi::class, 'akun_id');
     }

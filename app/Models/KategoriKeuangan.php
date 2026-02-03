@@ -3,6 +3,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class KategoriKeuangan extends Model
 {
@@ -12,10 +13,13 @@ class KategoriKeuangan extends Model
 
     protected $fillable = [
         'nama',
-        'tipe',
+        'tipe', // 'pemasukan' atau 'pengeluaran'
     ];
 
-    public function transaksi()
+    /**
+     * Relasi: Satu kategori bisa digunakan oleh banyak transaksi.
+     */
+    public function transaksi(): HasMany
     {
         return $this->hasMany(Transaksi::class, 'kategori_id');
     }

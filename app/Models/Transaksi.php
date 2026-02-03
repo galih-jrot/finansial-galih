@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Transaksi extends Model
 {
@@ -12,25 +14,42 @@ class Transaksi extends Model
 
     protected $fillable = [
         'tanggal',
-        'jenis',
+        'jenis', // 'pemasukan' atau 'pengeluaran'
         'kategori_id',
         'akun_id',
-        'user_id',
         'jumlah',
         'keterangan',
+        'user_id',
     ];
 
-    public function kategori()
+    /**
+     * Cast tanggal agar otomatis menjadi objek Carbon.
+     */
+    protected $casts = [
+        'tanggal' => 'date',
+        'jumlah' => 'decimal:2',
+    ];
+
+    /**
+     * Relasi ke Kategori.
+     */
+    public function kategori(): BelongsTo
     {
         return $this->belongsTo(KategoriKeuangan::class, 'kategori_id');
     }
 
-    public function akun()
+    /**
+     * Relasi ke Akun Keuangan.
+     */
+    public function akun(): BelongsTo
     {
         return $this->belongsTo(AkunKeuangan::class, 'akun_id');
     }
 
-    public function user()
+    /**
+     * Relasi ke User pemilik transaksi.
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
