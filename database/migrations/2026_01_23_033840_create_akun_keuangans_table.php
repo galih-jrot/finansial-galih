@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('nama_akun');
             $table->enum('jenis', ['tunai', 'bank', 'e-wallet']);
             $table->decimal('saldo_awal', 15, 2);
+            $table->decimal('saldo_sekarang', 15, 2)->default(0);
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }

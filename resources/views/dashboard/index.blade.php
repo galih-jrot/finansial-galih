@@ -1,267 +1,208 @@
-@extends('layouts.dashboard')
+@extends('layouts.app')
 
 @section('content')
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-<style>
-:root {
-    --font-main: 'Plus Jakarta Sans', sans-serif;
-    --bg-soft: #ffffff;
-    --primary: #6366f1;
-    --success: #10b981;
-    --danger: #ef4444;
-}
-
-body {
-    font-family: var(--font-main);
-    background: var(--bg-soft);
-}
-
-/* ===== STAT CARD ===== */
-.stat-card {
-    border: none;
-    border-radius: 24px;
-    transition: all .35s ease;
-}
-
-.stat-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 40px rgba(0,0,0,.08);
-}
-
-.bg-expense {
-    background: linear-gradient(135deg, #fde2e2, #fecaca);
-    color: #7f1d1d;
-}
-
-.bg-income {
-    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
-    color: #065f46;
-}
-
-.bg-balance {
-    background: linear-gradient(135deg, #6366f1, #4338ca);
-    color: #fff;
-}
-
-.glass-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    background: rgba(255,255,255,.25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* ===== CARD SOFT ===== */
-.card-soft {
-    background: #fff;
-    border: none;
-    border-radius: 24px;
-    box-shadow: 0 12px 30px rgba(0,0,0,.04);
-}
-
-/* ===== AKSI CEPAT ===== */
-.action-btn {
-    border-radius: 20px;
-    padding: 18px;
-    border: none;
-    text-align: left;
-    transition: .3s ease;
-}
-
-.action-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(0,0,0,.06);
-}
-
-.action-income {
-    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-    color: #065f46;
-}
-
-.action-expense {
-    background: linear-gradient(135deg, #fff1f2, #ffe4e6);
-    color: #7f1d1d;
-}
-
-.action-report {
-    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
-    color: #312e81;
-}
-
-/* ===== TABLE ===== */
-.custom-table {
-    border-collapse: separate;
-    border-spacing: 0 12px;
-}
-
-.custom-table tr {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 6px 18px rgba(0,0,0,.04);
-}
-
-.custom-table td {
-    border: none;
-    padding: 16px;
-}
-</style>
-
-<div class="container-xxl container-p-y">
-
-    {{-- ===== STAT ===== --}}
-    <div class="row g-4 mb-4">
-        <div class="col-lg-4">
-            <div class="stat-card bg-expense p-4" data-aos="fade-up">
-                <div class="glass-icon mb-3"><i class="bx bx-trending-down fs-3"></i></div>
-                <p class="opacity-75 mb-1">Pengeluaran Bulan Ini</p>
-                <h3 class="fw-semibold mb-0">
-                    Rp {{ number_format($total_pengeluaran ?? 0,0,',','.') }}
-                </h3>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="stat-card bg-income p-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="glass-icon mb-3"><i class="bx bx-trending-up fs-3"></i></div>
-                <p class="opacity-75 mb-1">Pemasukan Bulan Ini</p>
-                <h3 class="fw-semibold mb-0">
-                    Rp {{ number_format($total_pemasukan ?? 0,0,',','.') }}
-                </h3>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="stat-card bg-balance p-4" data-aos="fade-up" data-aos-delay="200">
-                <span class="badge bg-white text-primary rounded-pill mb-3">OVERVIEW</span>
-                <div class="glass-icon mb-3"><i class="bx bx-wallet fs-3"></i></div>
-                <p class="opacity-75 mb-1">Saldo Saat Ini</p>
-                <h2 class="fw-bold display-6 mb-0">
-                    Rp {{ number_format(($total_pemasukan ?? 0)-($total_pengeluaran ?? 0),0,',','.') }}
-                </h2>
-            </div>
+<div class="space-y-8 animate__animated animate__fadeIn">
+    {{-- Header --}}
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-2xl font-black text-slate-800 tracking-tight">Financial Intelligence</h2>
+            <p class="text-sm text-slate-500 font-medium text-decoration-none">Wawasan arus kas dan performa keuangan real-time Anda.</p>
         </div>
     </div>
 
-    {{-- ===== CHART + ACTION ===== --}}
-    <div class="row g-4 mb-4">
-        <div class="col-lg-8" data-aos="fade-right">
-            <div class="card-soft p-4 h-100">
-                <h5 class="fw-semibold mb-4">Ringkasan Arus Kas Bulanan</h5>
-                <div style="height:300px">
-                    <canvas id="cashFlowChart"></canvas>
+    {{-- SUMMARY CARDS --}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {{-- Income Card --}}
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.03)] p-6">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-1">Income</p>
+                    <h6 class="text-slate-800 font-bold mb-0">Total Pemasukan</h6>
+                </div>
+                <div class="bg-emerald-50 text-emerald-600 p-3 rounded-xl">
+                    <i class="bx bx-trending-up text-xl"></i>
                 </div>
             </div>
+            <h3 class="font-black text-emerald-500 mb-0">
+                Rp {{ number_format($total_pemasukan, 0, ',', '.') }}
+            </h3>
         </div>
 
-        <div class="col-lg-4" data-aos="fade-left">
-            <div class="card-soft p-4 h-100">
-                <h5 class="fw-semibold mb-4">Aksi Cepat</h5>
-
-                <div class="d-grid gap-3">
-                    <button class="action-btn action-income">
-                        <b>Tambah Pemasukan</b><br>
-                        <small>Catat pemasukan baru</small>
-                    </button>
-
-                    <button class="action-btn action-expense">
-                        <b>Tambah Pengeluaran</b><br>
-                        <small>Catat pengeluaran baru</small>
-                    </button>
-
-                    <button class="action-btn action-report">
-                        <b>Unduh Laporan</b><br>
-                        <small>PDF / Excel</small>
-                    </button>
+        {{-- Expense Card --}}
+        <div class="bg-white rounded-[2rem] border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.03)] p-6">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-1">Expense</p>
+                    <h6 class="text-slate-800 font-bold mb-0">Total Pengeluaran</h6>
+                </div>
+                <div class="bg-rose-50 text-rose-600 p-3 rounded-xl">
+                    <i class="bx bx-trending-down text-xl"></i>
                 </div>
             </div>
+            <h3 class="font-black text-rose-500 mb-0">
+                Rp {{ number_format($total_pengeluaran, 0, ',', '.') }}
+            </h3>
+        </div>
+
+        {{-- Net Worth Card --}}
+        <div class="bg-indigo-50 rounded-[2rem] border border-indigo-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.03)] p-6">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-indigo-600 text-xs font-black uppercase tracking-widest mb-1">Net Worth</p>
+                    <h6 class="text-slate-800 font-bold mb-0">Saldo Akhir</h6>
+                </div>
+                <div class="bg-indigo-600 text-white p-3 rounded-xl shadow-lg">
+                    <i class="bx bx-wallet text-xl"></i>
+                </div>
+            </div>
+            <h3 class="font-black text-slate-800 mb-0">
+                Rp {{ number_format($total_saldo, 0, ',', '.') }}
+            </h3>
         </div>
     </div>
 
-    {{-- ===== TRANSAKSI ===== --}}
-    <div class="card-soft p-4" data-aos="fade-up">
-        <div class="d-flex justify-content-between mb-3">
-            <h5 class="fw-semibold mb-0">Aktivitas Terakhir</h5>
-            <a href="#" class="btn btn-sm btn-outline-primary rounded-pill">Lihat Riwayat</a>
+    {{-- Charts and Recent Transactions --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {{-- GRAFIK --}}
+        <div class="lg:col-span-2 bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.03)] overflow-hidden">
+            <div class="p-8 border-b border-slate-50">
+                <div class="flex justify-between items-center">
+                    <h5 class="font-black text-slate-800 mb-0">Grafik Bulanan</h5>
+                    <span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-bold">Statistik Tahun Ini</span>
+                </div>
+            </div>
+            <div class="p-8">
+                <div id="monthlyChart" style="min-height: 320px;"></div>
+            </div>
         </div>
 
-        <div class="table-responsive">
-            <table class="table custom-table">
-                <tbody>
-                @forelse($transactions as $trx)
-                    <tr>
-                        <td>
-                            <b>{{ $trx->keterangan }}</b><br>
-                            <small class="text-muted text-capitalize">{{ $trx->jenis }}</small>
-                        </td>
-                        <td>{{ $trx->tanggal->format('d M Y') }}</td>
-                        <td class="text-end fw-bold {{ $trx->jenis=='pemasukan'?'text-success':'text-danger' }}">
-                            {{ $trx->jenis=='pemasukan' ? '+' : '-' }}
-                            Rp {{ number_format($trx->jumlah,0,',','.') }}
-                        </td>
-                    </tr>
+        {{-- TRANSAKSI TERAKHIR --}}
+        <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.03)] overflow-hidden">
+            <div class="p-8 border-b border-slate-50">
+                <h5 class="font-black text-slate-800 mb-0">Transaksi Terakhir</h5>
+            </div>
+            <div class="divide-y divide-slate-50">
+                @forelse($transactions as $t)
+                <div class="p-6 hover:bg-slate-50/50 transition-all">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <p class="text-sm font-bold text-slate-700 mb-1">{{ $t->deskripsi }}</p>
+                            <p class="text-xs text-slate-400">
+                                {{ \Carbon\Carbon::parse($t->tanggal)->format('d M Y') }} •
+                                <span class="{{ $t->jenis == 'pemasukan' ? 'text-emerald-500' : 'text-rose-500' }}">
+                                    {{ ucfirst($t->jenis) }}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-bold {{ $t->jenis == 'pemasukan' ? 'text-emerald-500' : 'text-rose-500' }}">
+                                {{ $t->jenis == 'pemasukan' ? '+' : '-' }} Rp {{ number_format($t->jumlah, 0, ',', '.') }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
                 @empty
-                    <tr>
-                        <td colspan="3" class="text-center py-5 text-muted">
-                            Belum ada aktivitas keuangan
-                        </td>
-                    </tr>
+                <div class="p-16 text-center">
+                    <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 mx-auto text-slate-300">
+                        <i class="bx bx-receipt text-2xl"></i>
+                    </div>
+                    <h4 class="text-slate-800 font-black mb-2">Belum Ada Transaksi</h4>
+                    <p class="text-slate-400 text-sm">Mulai catat pengeluaran atau pemasukan Anda.</p>
+                </div>
                 @endforelse
-                </tbody>
-            </table>
+            </div>
+            <div class="p-6 border-t border-slate-50">
+                <a href="{{ route('dashboard.transaksi.index') }}" class="inline-flex items-center justify-center w-full px-4 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-all no-underline">
+                    Lihat Semua Transaksi
+                </a>
+            </div>
         </div>
     </div>
-
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-AOS.init({ duration: 800, once: true });
+<style>
+    .animate__fadeIn {
+        animation: fadeIn 0.8s ease-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
 
-const ctx = document.getElementById('cashFlowChart');
-new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: {!! json_encode($grafik_data->pluck('bulan')) !!},
-        datasets: [
-            {
-                label: 'Pemasukan',
-                data: {!! json_encode($grafik_data->pluck('masuk')) !!},
-                borderColor: '#10b981',
-                backgroundColor: 'rgba(16,185,129,.12)',
-                tension: .4,
-                fill: true,
-                borderWidth: 3
-            },
-            {
-                label: 'Pengeluaran',
-                data: {!! json_encode($grafik_data->pluck('keluar')) !!},
-                borderColor: '#ef4444',
-                backgroundColor: 'rgba(239,68,68,.12)',
-                tension: .4,
-                fill: true,
-                borderWidth: 3
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: { usePointStyle: true, padding: 20 }
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const monthlyData = @json($grafik_data);
+
+    // Ensure we have data, if not, provide default empty data for all months
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const incomeData = new Array(12).fill(0);
+    const expenseData = new Array(12).fill(0);
+
+    // Fill data from database
+    monthlyData.forEach(item => {
+        const monthIndex = months.indexOf(item.bulan);
+        if (monthIndex !== -1) {
+            incomeData[monthIndex] = parseFloat(item.masuk) || 0;
+            expenseData[monthIndex] = parseFloat(item.keluar) || 0;
+        }
+    });
+
+    new ApexCharts(document.querySelector("#monthlyChart"), {
+        chart: {
+            type: 'bar',
+            height: 350,
+            toolbar: { show: false },
+            fontFamily: 'Plus Jakarta Sans, sans-serif'
+        },
+        series: [
+            { name: 'Income', data: incomeData },
+            { name: 'Expense', data: expenseData }
+        ],
+        colors: ['#22c55e', '#ef4444'],
+        plotOptions: {
+            bar: {
+                borderRadius: 4,
+                columnWidth: '50%',
+                dataLabels: { position: 'top' }
             }
         },
-        scales: {
-            y: { beginAtZero: true },
-            x: { grid: { display: false } }
+        dataLabels: {
+            enabled: false,
+        },
+        stroke: {
+            show: true,
+            width: 4,
+            colors: ['transparent']
+        },
+        xaxis: {
+            categories: months,
+            axisBorder: { show: false },
+            axisTicks: { show: false },
+            labels: { style: { colors: '#94a3b8', fontSize: '12px' } }
+        },
+        yaxis: {
+            labels: {
+                style: { colors: '#94a3b8' },
+                formatter: val => 'Rp ' + val.toLocaleString('id-ID')
+            }
+        },
+        grid: {
+            borderColor: '#f1f5f9',
+            strokeDashArray: 4,
+            yaxis: { lines: { show: true } }
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'right',
+            fontSize: '13px',
+            markers: { radius: 12 }
+        },
+        tooltip: {
+            y: { formatter: val => 'Rp ' + val.toLocaleString('id-ID') }
         }
-    }
+    }).render();
 });
 </script>
 @endsection

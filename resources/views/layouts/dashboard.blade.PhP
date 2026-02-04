@@ -27,7 +27,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Dashboard - @yield('title')</title>
+    <title>Dashboard - Analytics | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
 
     <meta name="description" content="" />
 
@@ -63,7 +63,6 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{asset('assets/js/config.js')}}"></script>
-    @stack('styles')
   </head>
 
   <body>
@@ -71,22 +70,25 @@
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         <!-- Menu -->
-        @include('layouts.components-dashboard.sidebar')
+
+      @include('layouts.components-dashboard.sidebar')
+
         <!-- end Menu -->
 
         <!-- Layout container -->
         <div class="layout-page">
           <!-- Navbar -->
-            @include('layouts.components-dashboard.navbar')
-          <!-- / end Navbar -->
+
+       @include('layouts.components-dashboard.navbar')
+
+          <!-- / Navbar -->
 
           <!-- Content wrapper -->
           <div class="content-wrapper">
             <!-- Content -->
-            <div class="container-xxl flex-grow-1 container-p-y">
-                @include('layouts._toast')
-                @yield('content')
-            </div>
+            @include('layouts._toast')
+            @yield('content')
+
             <!-- end Content -->
 
             <!-- Footer -->
@@ -106,10 +108,8 @@
     <!-- / Layout wrapper -->
 
 
-
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
-    @include('sweetalert::alert')
     <script src="{{asset('assets/vendor/libs/jquery/jquery.js')}}"></script>
     <script src="{{asset('assets/vendor/libs/popper/popper.js')}}"></script>
     <script src="{{asset('assets/vendor/js/bootstrap.js')}}"></script>
@@ -128,8 +128,8 @@
     <script src="{{asset('assets/js/dashboards-analytics.js')}}"></script>
 
     <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-
+    <script async defer src="https://buttons.github.io/buttons.js')}}"></script>
+    @include('sweetalert::alert')
     @stack('scripts')
   </body>
 </html>

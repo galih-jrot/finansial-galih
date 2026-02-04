@@ -4,6 +4,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class KategoriKeuangan extends Model
 {
@@ -12,8 +13,10 @@ class KategoriKeuangan extends Model
     protected $table = 'kategori_keuangan';
 
     protected $fillable = [
-        'nama',
-        'tipe', // 'pemasukan' atau 'pengeluaran'
+        'nama_kategori',
+        'jenis', // 'pemasukan' atau 'pengeluaran'
+        'deskripsi',
+        'user_id',
     ];
 
     /**

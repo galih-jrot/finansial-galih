@@ -13,11 +13,16 @@ class AkunKeuangan extends Model
     protected $table = 'akun_keuangan';
 
     protected $fillable = [
-        'nama_akun',
-        'jenis', // 'tunai', 'bank', atau 'e-wallet'
-        'saldo_awal',
-        'user_id',
-    ];
+        
+    'nama_akun',
+    'jenis',
+    'saldo_awal',
+    'saldo_sekarang',
+    'deskripsi',
+    'user_id',
+];
+
+   
 
     /**
      * Relasi: Akun ini milik seorang user.

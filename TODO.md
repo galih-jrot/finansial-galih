@@ -1,9 +1,7 @@
-- [x] Buat KategoriController.php di app/Http/Controllers/
-- [x] Buat view index untuk kategori di resources/views/dashboard/kategori/index.blade.php
-- [x] Buat view create untuk kategori di resources/views/dashboard/kategori/create.blade.php
-- [x] Buat view edit untuk kategori di resources/views/dashboard/kategori/edit.blade.php
-- [ ] Generate APP_KEY
-- [ ] Periksa konfigurasi database
-- [ ] Jalankan migration
-- [ ] Build Vite assets
-- [ ] Test aplikasi akhir
+# TODO: Fix Sidebar Menu Spacing
+
+- [x] Add mb-2 to Overview menu item
+- [x] Add mb-2 to Transaksi menu item
+- [x] Add mb-2 to Kategori menu item
+- [x] Add mb-2 to Akun/Rekening menu item
+- [x] Change mb-4 to mb-2 for Manajemen User menu item
