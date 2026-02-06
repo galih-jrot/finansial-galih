@@ -1,70 +1,99 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('content')
-<div class="max-w-4xl mx-auto">
-    {{-- Header Halaman --}}
-    <div class="flex items-center justify-between mb-8">
-        <div>
-            <h1 class="text-2xl font-black text-slate-800 tracking-tight">Tambah Akun Baru</h1>
-            <p class="text-slate-500 text-sm">Pisahkan sumber dana Anda agar pelacakan lebih akurat.</p>
+
+<div class="row justify-content-center">
+    <div class="col-xl-7 col-lg-8 col-md-10">
+
+        {{-- Header --}}
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="fw-bold mb-1">Tambah Akun Baru</h4>
+                <p class="text-muted mb-0">
+                    Pisahkan sumber dana Anda agar pelacakan lebih akurat.
+                </p>
+            </div>
+
+            {{-- Tombol Kembali --}}
+            <a href="{{ route('dashboard.akun-keuangan.index') }}"
+               class="btn btn-light rounded-circle shadow-sm"
+               title="Kembali">
+                <i class="bx bx-arrow-back"></i>
+            </a>
         </div>
-        <a href="{{ route('dashboard.akun-keuangan.index') }}" class="flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors no-underline">
-            <i class='bx bx-arrow-back'></i>
-            <span class="text-sm font-bold">Kembali</span>
-        </a>
-    </div>
 
-    {{-- Card Form --}}
-    <div class="bg-white rounded-[2.5rem] shadow-[20px_0_60px_-30px_rgba(0,0,0,0.05)] border border-slate-50 overflow-hidden">
-        <form action="{{ route('dashboard.akun-keuangan.store') }}" method="POST" class="p-10">
-            @csrf
+        {{-- Card --}}
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4 p-md-5">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                {{-- Nama Akun --}}
-                <div class="flex flex-col gap-2 md:col-span-2">
-                    <label class="text-xs font-black text-slate-400 uppercase tracking-widest px-1">Nama Akun / Rekening</label>
-                    <div class="relative">
-                        <i class='bx bx-credit-card-front absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl z-10'></i>
-                        <input type="text" name="nama_akun" required placeholder="Contoh: BCA Personal, Dompet Utama, Dana"
-                            class="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl text-slate-700 font-bold text-sm focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-300">
+                <form action="{{ route('dashboard.akun-keuangan.store') }}" method="POST">
+                    @csrf
+
+                    {{-- Nama Akun --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            Nama Akun / Rekening
+                        </label>
+                        <input type="text"
+                               name="nama_akun"
+                               class="form-control form-control-lg"
+                               placeholder="Contoh: BCA Personal, Dompet Utama"
+                               required>
                     </div>
-                </div>
 
-                {{-- Jenis Akun --}}
-                <div class="flex flex-col gap-2">
-                    <label class="text-xs font-black text-slate-400 uppercase tracking-widest px-1">Jenis Akun</label>
-                    <div class="relative">
-                        <i class='bx bx-category-alt absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl z-10'></i>
-                        <select name="jenis" required
-                            class="w-full pl-12 pr-10 py-4 bg-slate-50 border-none rounded-2xl text-slate-700 font-bold text-sm focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer">
-                            <option value="tunai" class="text-slate-700">Tunai (Cash)</option>
-                            <option value="bank" class="text-slate-700">Bank (Transfer)</option>
-                            <option value="e-wallet" class="text-slate-700">E-Wallet (Gopay, OVO, dll)</option>
-                        </select>
-                    </div>
-                </div>
+                    <div class="row g-4">
 
-                {{-- Saldo Awal --}}
-                <div class="flex flex-col gap-2">
-                    <label class="text-xs font-black text-slate-400 uppercase tracking-widest px-1">Saldo Awal</label>
-                    <div class="relative">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-black text-sm z-10">Rp</span>
-                        <input type="number" name="saldo_awal" required placeholder="0"
-                            class="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl text-indigo-600 font-black text-lg focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-300">
+                        {{-- Jenis Akun --}}
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                Jenis Akun
+                            </label>
+                            <select name="jenis"
+                                    class="form-select form-select-lg"
+                                    required>
+                                <option value="tunai">Tunai (Cash)</option>
+                                <option value="bank">Bank (Transfer)</option>
+                                <option value="e-wallet">E-Wallet</option>
+                            </select>
+                        </div>
+
+                        {{-- Saldo Awal --}}
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                Saldo Awal
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text fw-bold">Rp</span>
+                                <input type="number"
+                                       name="saldo_awal"
+                                       class="form-control fw-bold text-primary"
+                                       placeholder="0"
+                                       required>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
+
+                    {{-- Action Buttons --}}
+                    <div class="mt-5 d-flex gap-3">
+                        <button type="submit"
+                                class="btn btn-primary btn-lg fw-bold flex-fill">
+                            <i class="bx bx-save me-2"></i>
+                            Simpan Akun
+                        </button>
+
+                        <a href="{{ route('dashboard.akun-keuangan.index') }}"
+                           class="btn btn-outline-secondary btn-lg fw-bold flex-fill">
+                            Batal
+                        </a>
+                    </div>
+
+                </form>
 
             </div>
+        </div>
 
-            <div class="mt-10">
-                <button type="submit" 
-                    class="w-full py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black uppercase tracking-[0.2em] shadow-xl shadow-indigo-100 transition-all active:scale-[0.98] flex items-center justify-center gap-3 border-none cursor-pointer">
-                    <i class='bx bx-save text-xl'></i>
-                    Simpan Akun
-                </button>
-            </div>
-        </form>
     </div>
 </div>
+
 @endsection

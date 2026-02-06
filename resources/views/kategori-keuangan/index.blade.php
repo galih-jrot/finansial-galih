@@ -1,102 +1,108 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('content')
-<div class="space-y-8 animate__animated animate__fadeIn">
+<div class="container-fluid animate__animated animate__fadeIn px-3 px-md-4 px-lg-5" style="padding-top: 2rem; padding-bottom: 2rem;">
     {{-- Header & Action Section --}}
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <h2 class="text-2xl font-black text-slate-800 tracking-tight">Kategori Keuangan</h2>
-            <p class="text-sm text-slate-500 font-medium text-decoration-none">Kelola kategori untuk mengelompokkan pemasukan dan pengeluaran Anda.</p>
-        </div>
-        <div>
-            <a href="{{ route('dashboard.kategori-keuangan.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all no-underline">
-                <i class='bx bx-plus text-lg'></i>
-                Tambah Kategori
-            </a>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-4">
+                <div>
+                    <h2 class="fw-bold text-dark mb-2" style="font-size: 2rem;">Kategori Keuangan</h2>
+                    <p class="text-muted mb-0">Kelola kategori untuk mengelompokkan pemasukan dan pengeluaran Anda.</p>
+                </div>
+                <div>
+                    <a href="{{ route('dashboard.kategori-keuangan.create') }}" class="btn btn-primary rounded-pill px-4 py-2 fw-bold">
+                        <i class='bx bx-plus me-2'></i>
+                        Tambah Kategori
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
     {{-- Main Table Card --}}
-    <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.03)] overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-slate-50/50">
-                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Info Kategori</th>
-                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Tipe</th>
-                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Dibuat Pada</th>
-                        <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-50">
-                    @forelse ($kategori as $k)
-                    <tr class="hover:bg-slate-50/80 transition-all group">
-                        {{-- Nama Kategori --}}
-                        <td class="px-8 py-6">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-100 text-slate-500">
-                                    <i class='bx bx-category-alt text-xl'></i>
+    <div class="card border-0 shadow-sm" style="border-radius: 1.5rem;">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="px-4 py-3 text-muted small fw-bold text-uppercase border-0" style="letter-spacing: 0.05em;">Info Kategori</th>
+                            <th class="px-4 py-3 text-muted small fw-bold text-uppercase border-0" style="letter-spacing: 0.05em;">Tipe</th>
+                            <th class="px-4 py-3 text-muted small fw-bold text-uppercase border-0" style="letter-spacing: 0.05em;">Dibuat Pada</th>
+                            <th class="px-4 py-3 text-muted small fw-bold text-uppercase border-0 text-center" style="letter-spacing: 0.05em;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($kategori as $k)
+                        <tr class="table-hover">
+                            {{-- Nama Kategori --}}
+                            <td class="px-4 py-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="d-flex align-items-center justify-content-center rounded-circle bg-light text-muted" style="width: 40px; height: 40px;">
+                                        <i class='bx bx-category-alt fs-5'></i>
+                                    </div>
+                                    <div>
+                                        <p class="fw-bold text-dark mb-0 small">{{ $k->nama_kategori }}</p>
+                                        <small class="text-muted">ID Kategori: #{{ $k->id }}</small>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-sm font-bold text-slate-700 m-0 leading-tight">{{ $k->nama_kategori }}</p>
-                                    <span class="text-[10px] text-slate-400 font-medium">ID Kategori: #{{ $k->id }}</span>
+                            </td>
+
+                            {{-- Tipe --}}
+                            <td class="px-4 py-3">
+                                <span class="badge {{ $k->jenis == 'pemasukan' ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger' }} px-3 py-2 rounded-pill">
+                                    <i class="bx {{ $k->jenis == 'pemasukan' ? 'bx-trending-up' : 'bx-trending-down' }} me-1"></i>
+                                    {{ ucfirst($k->jenis) }}
+                                </span>
+                            </td>
+
+                            {{-- Tanggal --}}
+                            <td class="px-4 py-3">
+                                <span class="small fw-bold text-dark">
+                                    {{ $k->created_at ? $k->created_at->format('d M Y') : '-' }}
+                                </span>
+                            </td>
+
+                            {{-- Aksi --}}
+                            <td class="px-4 py-3 text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="{{ route('dashboard.kategori-keuangan.edit', $k->id) }}" title="Edit" class="btn btn-sm btn-outline-primary rounded-pill">
+                                        <i class='bx bx-edit-alt'></i>
+                                    </a>
+                                    <form action="{{ route('dashboard.kategori-keuangan.destroy', $k->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Hapus kategori ini?')">
+                                            <i class='bx bx-trash'></i>
+                                        </button>
+                                    </form>
                                 </div>
-                            </div>
-                        </td>
-
-                        {{-- Tipe --}}
-                        <td class="px-8 py-6">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest {{ $k->jenis == 'pemasukan' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' }}">
-                                <div class="w-1.5 h-1.5 rounded-full {{ $k->jenis == 'pemasukan' ? 'bg-emerald-500' : 'bg-rose-500' }}"></div>
-                                {{ $k->jenis }}
-                            </span>
-                        </td>
-
-                        {{-- Tanggal --}}
-                        <td class="px-8 py-6">
-                            <span class="text-xs font-bold text-slate-600">
-                                {{ $k->created_at ? $k->created_at->format('d M Y') : '-' }}
-                            </span>
-                        </td>
-
-                        {{-- Aksi --}}
-                        <td class="px-8 py-6 text-center">
-                            <div class="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <a href="{{ route('dashboard.kategori-keuangan.edit', $k->id) }}" class="p-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-all no-underline">
-                                    <i class='bx bx-edit-alt text-lg'></i>
-                                </a>
-                                <form action="{{ route('dashboard.kategori-keuangan.destroy', $k->id) }}" method="POST" class="inline m-0">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="p-2 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-600 hover:text-white transition-all border-none cursor-pointer" onclick="return confirm('Hapus kategori ini?')">
-                                        <i class='bx bx-trash text-lg'></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4" class="px-8 py-32 text-center">
-                            <div class="flex flex-col items-center">
-                                <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-300">
-                                    <i class='bx bx-bookmark-alt text-4xl'></i>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <div class="d-flex flex-column align-items-center">
+                                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 4rem; height: 4rem;">
+                                        <i class='bx bx-bookmark-alt fs-1 text-muted'></i>
+                                    </div>
+                                    <h6 class="text-dark fw-bold mb-2">Belum Ada Kategori</h6>
+                                    <p class="text-muted small mb-0">Anda belum menambahkan kategori keuangan apapun.</p>
                                 </div>
-                                <h4 class="text-slate-800 font-black">Belum Ada Kategori</h4>
-                                <p class="text-slate-400 text-sm">Anda belum menambahkan kategori keuangan apapun.</p>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            @if($kategori->hasPages())
+            <div class="card-footer bg-white border-0 p-4">
+                {{ $kategori->links() }}
+            </div>
+            @endif
         </div>
-        
-        @if($kategori->hasPages())
-        <div class="p-8 border-t border-slate-50 bg-slate-50/30">
-            {{ $kategori->links() }}
-        </div>
-        @endif
     </div>
 </div>
 
@@ -108,7 +114,6 @@
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
-    /* Memperbaiki pagination Laravel agar sinkron dengan Tailwind */
     nav[role="navigation"] svg { width: 20px; }
 </style>
 @endsection

@@ -35,6 +35,7 @@
                                 required>
                                 <option value="">Select Role</option>
                                 <option value="admin">Admin</option>
+                                <option value="user">User</option>
                                 <option value="petugas">Petugas</option>
                             </select>
                             @error('role')

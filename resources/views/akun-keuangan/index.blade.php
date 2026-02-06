@@ -1,74 +1,116 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('content')
-<div class="max-w-6xl mx-auto">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-        <div>
-            <h1 class="text-3xl font-black text-slate-800 tracking-tight">Akun & Rekening</h1>
-            <p class="text-slate-500 text-sm mt-1">Kelola semua sumber dana dan saldo awal Anda di sini.</p>
+<div class="container-fluid animate__animated animate__fadeIn px-3 px-md-4 px-lg-5" style="padding-top: 2rem; padding-bottom: 2rem;">
+    {{-- Header & Action Section --}}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-4">
+                <div>
+                    <h2 class="fw-bold text-dark mb-2" style="font-size: 2rem;">Akun & Rekening</h2>
+                    <p class="text-muted mb-0">Kelola semua sumber dana dan saldo awal Anda di sini.</p>
+                </div>
+                <div>
+                    <a href="{{ route('dashboard.akun-keuangan.create') }}" class="btn btn-primary rounded-pill px-4 py-2 fw-bold">
+                        <i class='bx bx-plus me-2'></i>
+                        Tambah Akun Baru
+                    </a>
+                </div>
+            </div>
         </div>
-        <a href="{{ route('dashboard.akun-keuangan.create') }}" 
-           class="inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-indigo-200 transition-all active:scale-95 no-underline">
-            <i class='bx bx-plus-circle text-xl'></i>
-            <span>Tambah Akun Baru</span>
-        </a>
     </div>
 
-    <div class="bg-white rounded-[2.5rem] shadow-[20px_0_60px_-30px_rgba(0,0,0,0.05)] border border-slate-50 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-slate-50/50">
-                        <th class="px-8 py-6 text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Nama Akun</th>
-                        <th class="px-8 py-6 text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Jenis</th>
-                        <th class="px-8 py-6 text-xs font-black text-slate-400 uppercase tracking-[0.2em] text-right">Saldo Awal</th>
-                        <th class="px-8 py-6 text-xs font-black text-slate-400 uppercase tracking-[0.2em] text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-50">
-                    @forelse ($akun as $a)
-                    <tr class="hover:bg-slate-50/50 transition-colors group">
-                        <td class="px-8 py-6">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                                    <i class='bx bx-credit-card-front text-xl'></i>
+    {{-- Main Table Card --}}
+    <div class="card border-0 shadow-sm" style="border-radius: 1.5rem;">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="px-4 py-3 text-muted small fw-bold text-uppercase border-0" style="letter-spacing: 0.05em;">Nama Akun</th>
+                            <th class="px-4 py-3 text-muted small fw-bold text-uppercase border-0" style="letter-spacing: 0.05em;">Jenis</th>
+                            <th class="px-4 py-3 text-muted small fw-bold text-uppercase border-0 text-end" style="letter-spacing: 0.05em;">Saldo Awal</th>
+                            <th class="px-4 py-3 text-muted small fw-bold text-uppercase border-0 text-center" style="letter-spacing: 0.05em;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($akun as $a)
+                        <tr class="table-hover">
+                            {{-- Nama Akun --}}
+                            <td class="px-4 py-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary" style="width: 40px; height: 40px;">
+                                        <i class='bx bx-credit-card-front fs-5'></i>
+                                    </div>
+                                    <span class="fw-bold text-dark">{{ $a->nama_akun }}</span>
                                 </div>
-                                <span class="font-bold text-slate-700">{{ $a->nama_akun }}</span>
-                            </div>
-                        </td>
-                        <td class="px-8 py-6">
-                            <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider 
-                                {{ $a->jenis == 'bank' ? 'bg-blue-50 text-blue-600' : 'bg-emerald-50 text-emerald-600' }}">
-                                {{ ucfirst($a->jenis) }}
-                            </span>
-                        </td>
-                        <td class="px-8 py-6 text-right">
-                            <span class="font-black text-slate-800 text-lg">
-                                <span class="text-slate-400 text-xs font-normal mr-1">Rp</span>{{ number_format($a->saldo_awal, 0, ',', '.') }}
-                            </span>
-                        </td>
-                        <td class="px-8 py-6">
-                            <div class="flex justify-center items-center gap-2">
-                                <a href="{{ route('dashboard.akun-keuangan.show', $a->id) }}" class="p-2 rounded-lg bg-slate-100 text-slate-500 hover:bg-indigo-100 hover:text-indigo-600 transition-all">
-                                    <i class='bx bx-show text-lg'></i>
-                                </a>
-                                <form action="{{ route('dashboard.akun-keuangan.destroy', $a->id) }}" method="POST" onsubmit="return confirm('Hapus akun ini?')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="p-2 rounded-lg bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-rose-600 transition-all border-none cursor-pointer">
-                                        <i class='bx bx-trash text-lg'></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4" class="px-8 py-20 text-center text-slate-400">Belum ada data.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                            </td>
+
+                            {{-- Jenis --}}
+                            <td class="px-4 py-3">
+                                <span class="badge {{ $a->jenis == 'bank' ? 'bg-info bg-opacity-10 text-info' : 'bg-success bg-opacity-10 text-success' }} px-3 py-2 rounded-pill">
+                                    <i class="bx {{ $a->jenis == 'bank' ? 'bx-building' : 'bx-wallet' }} me-1"></i>
+                                    {{ ucfirst($a->jenis) }}
+                                </span>
+                            </td>
+
+                            {{-- Saldo Awal --}}
+                            <td class="px-4 py-3 text-end">
+                                <span class="fw-bold text-dark">
+                                    Rp {{ number_format($a->saldo_awal, 0, ',', '.') }}
+                                </span>
+                            </td>
+
+                            {{-- Aksi --}}
+                            <td class="px-4 py-3 text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="{{ route('dashboard.akun-keuangan.show', $a->id) }}" title="Lihat Detail" class="btn btn-sm btn-outline-primary rounded-pill">
+                                        <i class='bx bx-show-alt'></i>
+                                    </a>
+                                    <form action="{{ route('dashboard.akun-keuangan.destroy', $a->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Hapus akun ini?')">
+                                            <i class='bx bx-trash'></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <div class="d-flex flex-column align-items-center">
+                                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 4rem; height: 4rem;">
+                                        <i class='bx bx-credit-card fs-1 text-muted'></i>
+                                    </div>
+                                    <h6 class="text-dark fw-bold mb-2">Belum Ada Akun</h6>
+                                    <p class="text-muted small mb-0">Tambahkan akun pertama untuk memulai.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            @if($akun->hasPages())
+            <div class="card-footer bg-white border-0 p-4">
+                {{ $akun->links() }}
+            </div>
+            @endif
         </div>
     </div>
 </div>
+
+<style>
+    .animate__fadeIn {
+        animation: fadeIn 0.8s ease-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    nav[role="navigation"] svg { width: 20px; }
+</style>
 @endsection

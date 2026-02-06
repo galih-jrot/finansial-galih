@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\AkunKeuanganController;
-use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Dashboard\KategoriKeuanganController;
 use App\Http\Controllers\Dashboard\TransaksiController;
 use App\Http\Controllers\Dashboard\UserController;

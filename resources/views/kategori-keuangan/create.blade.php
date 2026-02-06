@@ -1,89 +1,135 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('content')
-<div class="max-w-2xl mx-auto space-y-8 animate__animated animate__fadeIn">
-    {{-- Header Section --}}
-    <div class="flex items-center justify-between">
-        <div>
-            <h2 class="text-2xl font-black text-slate-800 tracking-tight">Tambah Kategori</h2>
-            <p class="text-sm text-slate-500 font-medium">Buat kategori baru untuk merapikan catatan keuangan Anda.</p>
+
+<div class="row justify-content-center">
+    <div class="col-xl-6 col-lg-7 col-md-9">
+
+        {{-- Header --}}
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="fw-bold mb-1">Tambah Kategori</h4>
+                <p class="text-muted mb-0">
+                    Buat kategori baru untuk merapikan catatan keuangan Anda.
+                </p>
+            </div>
+            <a href="{{ route('dashboard.kategori-keuangan.index') }}"
+               class="btn btn-light rounded-circle">
+                <i class="bx bx-x"></i>
+            </a>
         </div>
-        <a href="{{ route('dashboard.kategori-keuangan.index') }}" class="p-3 bg-white border border-slate-100 text-slate-400 rounded-2xl hover:text-slate-600 hover:border-slate-200 transition-all shadow-sm">
-            <i class='bx bx-x text-2xl'></i>
-        </a>
-    </div>
 
-    {{-- Form Card --}}
-    <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.03)] p-8 md:p-12">
-        <form action="{{ route('dashboard.kategori-keuangan.store') }}" method="POST" class="space-y-6">
-            @csrf
+        {{-- Card --}}
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4 p-md-5">
 
-            {{-- Input Nama Kategori --}}
-            <div class="space-y-2">
-                <label for="nama_kategori" class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Nama Kategori</label>
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i class='bx bx-tag-alt text-xl text-slate-300 group-focus-within:text-indigo-500 transition-colors'></i>
+                <form action="{{ route('dashboard.kategori-keuangan.store') }}" method="POST">
+                    @csrf
+
+                    {{-- Nama Kategori --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            Nama Kategori
+                        </label>
+                        <input type="text"
+                               name="nama_kategori"
+                               value="{{ old('nama_kategori') }}"
+                               class="form-control form-control-lg @error('nama_kategori') is-invalid @enderror"
+                               placeholder="Contoh: Gaji, Makanan, Investasi"
+                               required>
+                        @error('nama_kategori')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
-                    <input type="text" 
-                           name="nama_kategori" 
-                           id="nama_kategori" 
-                           class="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl text-sm font-bold text-slate-700 placeholder:text-slate-300 focus:ring-2 focus:ring-indigo-500/20 transition-all" 
-                           placeholder="Contoh: Gaji, Makanan, Investasi..."
-                           required>
-                </div>
-                @error('nama_kategori')
-                    <p class="text-rose-500 text-[10px] font-bold mt-1 ml-1">{{ $message }}</p>
-                @enderror
-            </div>
 
-            {{-- Input Jenis/Tipe --}}
-            <div class="space-y-2">
-                <label for="jenis" class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Tipe Kategori</label>
-                <div class="grid grid-cols-2 gap-4">
-                    {{-- Option Pemasukan --}}
-                    <label class="relative cursor-pointer">
-                        <input type="radio" name="jenis" value="pemasukan" class="peer sr-only" checked>
-                        <div class="flex items-center justify-center gap-3 p-4 rounded-2xl bg-slate-50 border-2 border-transparent text-slate-400 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 peer-checked:text-emerald-600 transition-all">
-                            <i class='bx bx-trending-up text-xl'></i>
-                            <span class="text-xs font-black uppercase tracking-widest">Pemasukan</span>
+                    {{-- Tipe --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold mb-3">
+                            Tipe Kategori
+                        </label>
+
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="w-100">
+                                    <input type="radio"
+                                           name="jenis"
+                                           value="pemasukan"
+                                           class="d-none"
+                                           {{ old('jenis','pemasukan') == 'pemasukan' ? 'checked' : '' }}>
+                                    <div class="border rounded-3 p-3 text-center radio-card">
+                                        <i class="bx bx-trending-up text-success fs-4"></i>
+                                        <div class="fw-semibold mt-1">Pemasukan</div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="col-6">
+                                <label class="w-100">
+                                    <input type="radio"
+                                           name="jenis"
+                                           value="pengeluaran"
+                                           class="d-none"
+                                           {{ old('jenis') == 'pengeluaran' ? 'checked' : '' }}>
+                                    <div class="border rounded-3 p-3 text-center radio-card">
+                                        <i class="bx bx-trending-down text-danger fs-4"></i>
+                                        <div class="fw-semibold mt-1">Pengeluaran</div>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
-                    </label>
 
-                    {{-- Option Pengeluaran --}}
-                    <label class="relative cursor-pointer">
-                        <input type="radio" name="jenis" value="pengeluaran" class="peer sr-only">
-                        <div class="flex items-center justify-center gap-3 p-4 rounded-2xl bg-slate-50 border-2 border-transparent text-slate-400 peer-checked:border-rose-500 peer-checked:bg-rose-50 peer-checked:text-rose-600 transition-all">
-                            <i class='bx bx-trending-down text-xl'></i>
-                            <span class="text-xs font-black uppercase tracking-widest">Pengeluaran</span>
-                        </div>
-                    </label>
-                </div>
-                @error('jenis')
-                    <p class="text-rose-500 text-[10px] font-bold mt-1 ml-1">{{ $message }}</p>
-                @enderror
-            </div>
+                        @error('jenis')
+                            <small class="text-danger d-block mt-2">
+                                {{ $message }}
+                            </small>
+                        @enderror
+                    </div>
 
-            {{-- Action Buttons --}}
-            <div class="pt-4 flex flex-col gap-3">
-                <button type="submit" class="w-full py-4 bg-indigo-600 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all">
-                    Simpan Kategori
-                </button>
-                <a href="{{ route('dashboard.kategori-keuangan.index') }}" class="w-full py-4 bg-transparent text-slate-400 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-center hover:bg-slate-50 transition-all no-underline">
-                    Batal
-                </a>
+                    {{-- Action --}}
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary px-4">
+                            Simpan Kategori
+                        </button>
+                        <a href="{{ route('dashboard.kategori-keuangan.index') }}"
+                           class="btn btn-light">
+                            Batal
+                        </a>
+                    </div>
+
+                </form>
+
             </div>
-        </form>
+        </div>
+
     </div>
 </div>
 
+@endsection
+
+@push('scripts')
 <style>
-    .animate__fadeIn {
-        animation: fadeIn 0.8s ease-out;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+    .radio-card.selected {
+        border-color: #007bff !important;
+        background-color: #f8f9fa;
     }
 </style>
-@endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const radioCards = document.querySelectorAll('.radio-card');
+
+        radioCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const label = this.closest('label');
+                const radio = label.querySelector('input[type="radio"]');
+                radio.checked = true;
+
+                // Add visual feedback
+                radioCards.forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+    });
+</script>
+@endpush

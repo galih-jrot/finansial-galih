@@ -1,43 +1,74 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
+
+@section('title', 'Detail Akun')
 
 @section('content')
-<div class="max-w-4xl mx-auto">
-    <div class="mb-8">
-        <a href="{{ route('dashboard.akun-keuangan.index') }}" class="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-600 no-underline font-bold transition-colors">
-            <i class='bx bx-left-arrow-alt text-2xl'></i>
-            <span>Kembali ke Daftar Akun</span>
+
+<div class="row justify-content-center">
+
+    {{-- KEMBALI --}}
+    <div class="col-12 col-xl-10 mb-4">
+        <a href="{{ route('dashboard.akun-keuangan.index') }}"
+           class="fw-semibold text-muted text-decoration-none d-inline-flex align-items-center gap-2">
+            <i class="bx bx-arrow-back fs-4"></i>
+            Kembali ke Daftar Akun
         </a>
     </div>
 
-    <div class="bg-white rounded-[2.5rem] shadow-xl border border-slate-50 overflow-hidden">
-        <div class="p-8 md:p-12">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-                <div class="flex items-center gap-6">
-                    <div class="w-20 h-20 rounded-3xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                        <i class='bx bx-credit-card-front text-5xl'></i>
-                    </div>
-                    <div>
-                        <h1 class="text-3xl font-black text-slate-800 tracking-tight">{{ $akun->nama_akun }}</h1>
-                        <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-black uppercase tracking-widest mt-2 bg-indigo-100 text-indigo-600">
-                            {{ $akun->jenis }}
-                        </span>
-                    </div>
+    {{-- CARD UTAMA --}}
+    <div class="col-12 col-xl-10">
+        <div class="card border-0 shadow-sm">
+
+            {{-- HEADER --}}
+            <div class="card-body d-flex align-items-center gap-4 border-bottom py-4">
+                <div class="avatar avatar-lg bg-label-primary">
+                    <i class="bx bx-credit-card-front fs-3"></i>
+                </div>
+
+                <div>
+                    <h4 class="fw-bold mb-1">
+                        {{ $akunKeuangan->nama_akun }}
+                    </h4>
+                    <span class="badge bg-label-primary text-uppercase">
+                        {{ ucfirst($akunKeuangan->jenis) }}
+                    </span>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-50 p-8 rounded-[2rem]">
-                    <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-2">Total Saldo</p>
-                    <h3 class="text-3xl font-black text-slate-800">
-                        <span class="text-slate-400 text-xl font-normal mr-1">Rp</span>{{ number_format($akun->saldo_awal, 0, ',', '.') }}
-                    </h3>
-                </div>
-                <div class="bg-slate-50 p-8 rounded-[2rem]">
-                    <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-2">Informasi Lain</p>
-                    <p class="text-slate-700 font-bold">Dibuat pada: {{ $akun->created_at->format('d M Y') }}</p>
+            {{-- BODY --}}
+            <div class="card-body py-5">
+                <div class="row g-4">
+
+                    {{-- SALDO --}}
+                    <div class="col-md-6">
+                        <div class="p-4 bg-light rounded">
+                            <small class="text-muted fw-semibold text-uppercase">
+                                Total Saldo
+                            </small>
+                            <h3 class="fw-bold mt-2 mb-0">
+                                Rp {{ number_format($akunKeuangan->saldo_awal, 0, ',', '.') }}
+                            </h3>
+                        </div>
+                    </div>
+
+                    {{-- INFO --}}
+                    <div class="col-md-6">
+                        <div class="p-4 bg-light rounded">
+                            <small class="text-muted fw-semibold text-uppercase">
+                                Informasi
+                            </small>
+                            <p class="fw-semibold mt-2 mb-0">
+                                Dibuat pada {{ $akunKeuangan->created_at->format('d M Y') }}
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+
         </div>
     </div>
+
 </div>
+
 @endsection

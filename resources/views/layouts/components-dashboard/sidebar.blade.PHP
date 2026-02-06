@@ -1,124 +1,218 @@
-<aside id="layout-menu" class="layout-menu menu-vertical menu bg-white border-end-0 shadow-sm" style="width: 280px;">
-    {{-- LOGO SECTION --}}
-    <div class="app-brand demo d-flex align-items-center px-4" style="height: 100px;">
-        <a href="{{ route('dashboard.index') }}" class="app-brand-link gap-2">
-            <span class="app-brand-logo demo">
-                <div class="p-2 rounded-3 bg-primary shadow-primary">
-                    {{-- Icon Grafik yang lebih modern untuk Finansial --}}
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="20" x2="12" y2="10"></line>
-                        <line x1="18" y1="20" x2="18" y2="4"></line>
-                        <line x1="6" y1="20" x2="6" y2="16"></line>
-                    </svg>
-                </div>
-            </span>
-          <div class="d-flex flex-column">
-    <span class="app-brand-text demo menu-text fw-black text-dark tracking-tight"
-          style="font-size: 1.5rem; line-height: 1;">
-        TK<span class="text-primary"></span>
-    </span>
-    <span class="text-muted fw-bold"
-          style="font-size: 0.65rem; letter-spacing: 2px;">
-        TRANS KEUANGAN
-    </span>
-</div>
+<aside id="layout-menu"
+       class="layout-menu menu-vertical menu bg-light border-end-0 shadow"
+       style="width:280px; display:flex; flex-direction:column;">
 
+    {{-- ================= BRAND / LOGO ================= --}}
+    <div class="sidebar-brand">
+        <a href="{{ route('dashboard.index') }}" class="brand-link">
+            <div class="brand-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <span class="brand-title">TK</span>
+                <span class="brand-subtitle">TRANS KEUANGAN</span>
+            </div>
         </a>
     </div>
 
-    <div class="menu-inner-shadow"></div>
+    {{-- ================= MENU ================= --}}
+    <ul class="menu-inner px-3 pt-4" style="flex:1">
 
-    <ul class="menu-inner py-3 px-3">
-        {{-- OVERVIEW (Ditambahkan agar lengkap seperti di foto) --}}
         <li class="menu-item mb-2 {{ Request::is('dashboard') ? 'active' : '' }}">
             <a href="{{ route('dashboard.index') }}" class="menu-link rounded-4 py-3">
                 <i class="menu-icon bx bx-grid-alt fs-4"></i>
-                <div class="fw-bold">Overview</div>
+                <span>Overview</span>
             </a>
         </li>
 
-        {{-- TRANSAKSI --}}
         <li class="menu-item mb-2 {{ Request::is('dashboard/transaksi*') ? 'active' : '' }}">
             <a href="{{ route('dashboard.transaksi.index') }}" class="menu-link rounded-4 py-3">
                 <i class="menu-icon bx bx-transfer-alt fs-4"></i>
-                <div class="fw-bold">Transaksi</div>
+                <span>Transaksi</span>
             </a>
         </li>
 
-        {{-- MANAGEMENT HEADER --}}
         <li class="menu-header small text-uppercase my-4">
-            <span class="menu-header-text fw-black text-muted tracking-widest" style="font-size: 0.7rem;">Management</span>
+            <span class="menu-header-text">Management</span>
         </li>
 
-        {{-- KATEGORI --}}
         <li class="menu-item mb-2 {{ Request::is('dashboard/kategori-keuangan*') ? 'active' : '' }}">
             <a href="{{ route('dashboard.kategori-keuangan.index') }}" class="menu-link rounded-4 py-3">
                 <i class="menu-icon bx bx-category fs-4"></i>
-                <div class="fw-bold">Kategori</div>
+                <span>Kategori</span>
             </a>
         </li>
 
-        {{-- AKUN/REKENING --}}
         <li class="menu-item mb-2 {{ Request::is('dashboard/akun-keuangan*') ? 'active' : '' }}">
             <a href="{{ route('dashboard.akun-keuangan.index') }}" class="menu-link rounded-4 py-3">
                 <i class="menu-icon bx bx-credit-card fs-4"></i>
-                <div class="fw-bold">Akun/Rekening</div>
+                <span>Akun / Rekening</span>
             </a>
         </li>
 
-        {{-- USER MANAGEMENT --}}
-        <li class="menu-item {{ Request::is('dashboard/users*') ? 'active' : '' }} mb-4">
+        <li class="menu-item {{ Request::is('dashboard/users*') ? 'active' : '' }}">
             <a href="{{ route('dashboard.users.index') }}" class="menu-link rounded-4 py-3">
                 <i class="menu-icon bx bx-user-circle fs-4"></i>
-                <div class="fw-bold">Manajemen User</div>
+                <span>Manajemen User</span>
             </a>
         </li>
-
-        {{-- USER PROFILE CARD --}}
-        <div class="mt-auto p-3 rounded-5 bg-dark mb-2 shadow-lg mx-1">
-            <div class="d-flex align-items-center mb-3">
-                <div class="avatar avatar-md me-3">
-                    <span class="avatar-initial rounded-3 bg-primary fw-bold text-uppercase">{{ substr(Auth::user()->name, 0, 2) }}</span>
-                </div>
-                <div class="user-info">
-                    <h6 class="text-white mb-0 fw-bold">{{ Auth::user()->name }}</h6>
-                    <small class="text-muted fw-bold text-uppercase" style="font-size: 0.6rem; letter-spacing: 1px;">Administrator</small>
-                </div>
-            </div>
-            
-            <form action="{{ route('dashboard.logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-danger w-100 rounded-4 fw-black py-2 text-uppercase tracking-widest" style="font-size: 0.75rem;">
-                    Logout
-                </button>
-            </form>
-        </div>
     </ul>
+
+    {{-- ================= USER CARD ================= --}}
+    <div class="sidebar-user">
+        <div class="user-info">
+            <div class="user-avatar">
+                {{ substr(Auth::user()->name, 0, 2) }}
+            </div>
+            <div class="user-meta">
+                <span class="user-name">{{ Auth::user()->name }}</span>
+                <span class="user-role {{ Auth::user()->role }}">
+                    {{ ucfirst(Auth::user()->role) }}
+                </span>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ route('dashboard.logout') }}">
+            @csrf
+            <button type="submit" class="btn-logout">
+                Logout
+            </button>
+        </form>
+    </div>
 </aside>
 
+{{-- ================= STYLE ================= --}}
 <style>
-    /* Custom Styling sesuai gambar */
-    .menu-vertical .menu-item.active > .menu-link {
-        background-color: #5544FF !important; /* Warna ungu brand */
-        color: #fff !important;
-        box-shadow: 0 10px 20px -5px rgba(85, 68, 255, 0.4);
-    }
-    .menu-vertical .menu-item.active i {
-        color: #fff !important;
-    }
-    .menu-link {
-        color: #64748b !important;
-        transition: all 0.3s ease;
-    }
-    .menu-link:hover {
-        background-color: #f8fafc !important;
-        transform: translateX(5px); /* Animasi geser sedikit saat hover */
-    }
-    .fw-black { font-weight: 900 !important; }
-    .tracking-widest { letter-spacing: 0.15em !important; }
-    .tracking-tight { letter-spacing: -0.05em !important; }
-    .shadow-primary { box-shadow: 0 8px 15px -3px rgba(105, 108, 255, 0.4); }
-    .bg-dark { background-color: #0F172A !important; } 
-    .avatar-initial { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; }
-    .text-primary { color: #5544FF !important; } /* Menyelaraskan warna teks dengan brand */
+/* BRAND */
+.sidebar-brand {
+    height:120px;
+    margin:0 16px 10px;
+    border-radius:0 0 28px 0;
+    background:linear-gradient(135deg,#6366f1,#7c3aed);
+    box-shadow:0 20px 40px rgba(99,102,241,.35);
+    display:flex;
+    align-items:center;
+}
+.brand-link {
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:24px;
+    color:#fff;
+    text-decoration:none;
+}
+.brand-icon {
+    width:52px;
+    height:52px;
+    border-radius:16px;
+    background:rgba(255,255,255,.18);
+    backdrop-filter:blur(6px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.brand-text {
+    display:flex;
+    flex-direction:column;
+}
+.brand-title {
+    font-size:22px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+.brand-subtitle {
+    font-size:11px;
+    letter-spacing:3px;
+    opacity:.85;
+}
+
+/* MENU */
+.menu-link {
+    color:#64748b!important;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    transition:.25s ease;
+}
+.menu-link:hover {
+    background:#f8fafc!important;
+    transform:translateX(6px);
+}
+.menu-item.active>.menu-link {
+    background:#5544ff!important;
+    color:#fff!important;
+    box-shadow:0 10px 25px rgba(85,68,255,.4);
+}
+.menu-item.active i {
+    color:#fff!important;
+}
+.menu-header-text {
+    font-size:.7rem;
+    letter-spacing:.18em;
+    color:#94a3b8;
+    font-weight:700;
+}
+
+/* USER CARD */
+.sidebar-user {
+    margin:20px;
+    padding:18px;
+    border-radius:20px;
+    background:#fff;
+    box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+.user-info {
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:16px;
+}
+.user-avatar {
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#6366f1,#7c3aed);
+    color:#fff;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.user-meta {
+    display:flex;
+    flex-direction:column;
+}
+.user-name {
+    font-weight:600;
+    font-size:14px;
+}
+.user-role {
+    font-size:11px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:#6366f1;
+}
+
+/* LOGOUT */
+.btn-logout {
+    width:100%;
+    padding:12px;
+    border-radius:14px;
+    border:none;
+    background:#f1f5f9;
+    color:#ef4444;
+    font-weight:600;
+    transition:.25s ease;
+}
+.btn-logout:hover {
+    background:#ef4444;
+    color:#fff;
+    transform:translateY(-2px);
+}
 </style>

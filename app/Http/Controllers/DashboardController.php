@@ -2,51 +2,61 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AkunKeuangan;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Total Pemasukan
-        $total_pemasukan = Transaksi::where('jenis', 'pemasukan')->sum('jumlah');
+        $akunId = $request->akun_id;
 
-        // Total Pengeluaran
-        $total_pengeluaran = Transaksi::where('jenis', 'pengeluaran')->sum('jumlah');
+        $akun_keuangan = auth()->check() ? AkunKeuangan::where('user_id', auth()->id())->get() : collect();
 
-        // Total Saldo (Pemasukan - Pengeluaran)
-        $total_saldo = $total_pemasukan - $total_pengeluaran;
+        $transaksiQuery = Transaksi::where('user_id', auth()->id());
 
-        // Data untuk grafik bulanan
-        $grafik_data = Transaksi::select(
-            DB::raw('MONTH(tanggal) as bulan'),
-            DB::raw('YEAR(tanggal) as tahun'),
-            DB::raw('SUM(CASE WHEN jenis = "pemasukan" THEN jumlah ELSE 0 END) as masuk'),
-            DB::raw('SUM(CASE WHEN jenis = "pengeluaran" THEN jumlah ELSE 0 END) as keluar')
-        )
-        ->whereYear('tanggal', date('Y'))
-        ->groupBy('tahun', 'bulan')
-        ->orderBy('bulan')
-        ->get()
-        ->map(function ($item) {
-            $item->bulan = date('M', mktime(0, 0, 0, $item->bulan, 1));
-            return $item;
-        });
+        if ($akunId) {
+            $transaksiQuery->where('akun_id', $akunId);
+        }
 
-        // Transaksi terakhir (5 terbaru)
-        $transactions = Transaksi::with(['kategori', 'akun'])
+        $totalPemasukan = (clone $transaksiQuery)
+            ->where('jenis', 'pemasukan')
+            ->sum('jumlah');
+
+        $totalPengeluaran = (clone $transaksiQuery)
+            ->where('jenis', 'pengeluaran')
+            ->sum('jumlah');
+
+        $saldoAkhir = $totalPemasukan - $totalPengeluaran;
+
+        // DATA GRAFIK BULANAN
+        $grafik = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $grafik['pemasukan'][] = (clone $transaksiQuery)
+                ->whereMonth('tanggal', $i)
+                ->where('jenis', 'pemasukan')
+                ->sum('jumlah');
+
+            $grafik['pengeluaran'][] = (clone $transaksiQuery)
+                ->whereMonth('tanggal', $i)
+                ->where('jenis', 'pengeluaran')
+                ->sum('jumlah');
+        }
+
+        $transaksiTerakhir = (clone $transaksiQuery)
             ->latest()
-            ->take(5)
+            ->limit(5)
             ->get();
 
         return view('dashboard.index', compact(
-            'total_pemasukan',
-            'total_pengeluaran',
-            'total_saldo',
-            'grafik_data',
-            'transactions'
+            'akun_keuangan',
+            'akunId',
+            'totalPemasukan',
+            'totalPengeluaran',
+            'saldoAkhir',
+            'grafik',
+            'transaksiTerakhir'
         ));
     }
 }
